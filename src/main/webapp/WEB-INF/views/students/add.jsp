@@ -14,23 +14,18 @@
     <form:label path="lastName">Last Name: </form:label>
     <form:input path="lastName"/><br/>
     <form:label path="lastName">Gender: </form:label>
-    Male: <form:radiobutton path="gender" value="M"/>
-    Female: <form:radiobutton path="gender" value="F"/>
-
+    Male: <form:radiobutton path="gender" value="M"/><br/>
+    Female: <form:radiobutton path="gender" value="F"/><br/>
     <form:label path="country">Country: </form:label>
-    <form:select path="country" items="${countryItems}" />
-
+    <form:select path="country" items="${countryItems}" /><br/>
     <form:label path="notes">Notes: </form:label>
     <form:textarea path="notes" cols="3" rows="3"/><br/>
     <form:label path="mailingList">Mailing: </form:label>
     <form:checkbox path="mailingList"/><br/>
-
     <form:label path="programmingSkills">Programing skills: </form:label>
-    <form:select path="programmingSkills" items="${programingItems}" multiple="true" />
-
+    <form:select path="programmingSkills" items="${programingItems}" multiple="true" /><br/>
     <form:label path="hobbies">Hobbies: </form:label>
     <form:checkboxes path="hobbies" items="${hobbiesItems}"/><br/>
-
 
     <form:button>Send</form:button>
 </form:form>

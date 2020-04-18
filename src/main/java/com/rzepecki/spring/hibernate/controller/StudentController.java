@@ -1,7 +1,8 @@
 package com.rzepecki.spring.hibernate.controller;
 
-import com.rzepecki.spring.hibernate.domain.model.Person;
 import com.rzepecki.spring.hibernate.domain.model.Student;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +15,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+
 @Controller
 @RequestMapping("/students")
 public class StudentController {
+
+    private final static Logger logger = LoggerFactory.getLogger(StudentController.class);
 
     @GetMapping("/add")
     public String getForm(Model model){
@@ -26,7 +30,7 @@ public class StudentController {
 
     @PostMapping("/add")
     public String processAddPersonBind(@ModelAttribute("modelStudent") Student student){
-        System.out.println(student);
+        logger.info(student.toString());
         return "students/add-success";
     }
 

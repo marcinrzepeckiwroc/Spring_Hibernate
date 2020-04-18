@@ -48,4 +48,5 @@ public class PublisherController {
         publisherDao.delete(publisherDao.getById(id));
         return id+" deleted";
     }
+
 }

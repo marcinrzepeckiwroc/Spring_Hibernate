@@ -26,7 +26,7 @@ public class Book {
     @Column(name = "publisher_id", updatable = false, insertable = false)
     private Long publisherId;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "books_authors",
     joinColumns = @JoinColumn(name = "book_id"),
     inverseJoinColumns = @JoinColumn(name = "author_id"))

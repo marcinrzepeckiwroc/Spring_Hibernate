@@ -91,5 +91,10 @@ public class BookDao {
         //return resultList.stream().filter(book -> book.getAuthors().stream().anyMatch(author -> author.getFirstName().equals(name))).collect(Collectors.toList());
     }
 
+    public List<Book> findAllWithAuthors(){
+        return entityManager.createQuery("SELECT b FROM Book b LEFT JOIN FETCH b.authors", Book.class)
+                .getResultList();
+    }
+
 
 }
