@@ -19,7 +19,7 @@
 
 <h2>Different spring approach</h2>
 
-<form:form method="post" modelAttribute="person" action="/persons/add-bind">
+<form:form method="post" modelAttribute="modelPerson" action="/persons/add-bind">
     <form:label path="login">Login: </form:label>
     <form:input path="login"/><br/>
     <form:label path="email">Email: </form:label>
