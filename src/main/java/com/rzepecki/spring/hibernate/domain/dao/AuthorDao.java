@@ -11,34 +11,33 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
+@Transactional
 public class AuthorDao {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
-    @Transactional
-    public void save(Author author){
-        entityManager.persist(author);
-    }
-
-    @Transactional
-    public void update(Author author){
-        entityManager.merge(author);
-    }
-
-    public Author findById(Long id){
+    public Author getById(Long id) {
         return entityManager.find(Author.class, id);
     }
 
-    @Transactional
-    public void delete(Author author){
-        entityManager.remove(entityManager.contains(author) ?
-                author : entityManager.merge(author));
+    public void save(Author entity) {
+        entityManager.persist(entity);
     }
 
-    public List<Author> findAll(){
-        TypedQuery<Author> query = entityManager.createQuery("SELECT a FROM Author a", Author.class);
-        List<Author> resultList = query.getResultList();
-        return resultList;
+    public void update(Author entity) {
+        entityManager.merge(entity);
+    }
+
+    public Author updateAndReturn(Author entity) {
+        return entityManager.merge(entity);
+    }
+
+    public void remove(Author entity) {
+        entityManager.remove(entityManager.contains(entity) ? entity : entityManager.merge(entity));
+    }
+
+    public List<Author> findAll() {
+        return entityManager.createQuery("SELECT a FROM Author a", Author.class).getResultList();
     }
 }

@@ -29,7 +29,17 @@
             <td>${book.rating}</td>
             <td>${book.publisher}</td>
             <td>${book.authors}</td>
-            <td></td>
+            <td>
+                <c:url value="/forms/books/edit" var="editURL">
+                    <c:param name="id" value="${book.id}"/>
+                </c:url>
+                <a href="${editURL}"> Edit</a>
+
+                <c:url value="/forms/books/delete" var="deleteURL">
+                    <c:param name="id" value="${book.id}"/>
+                </c:url>
+                <a href="${deleteURL}"> Delete</a>
+
         </tr>
     </c:forEach>
 </table>

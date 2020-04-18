@@ -2,14 +2,13 @@ package com.rzepecki.spring.hibernate.controller;
 
 import com.rzepecki.spring.hibernate.domain.dao.AuthorDao;
 import com.rzepecki.spring.hibernate.domain.model.Author;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @Controller
-@RequestMapping("/author")
+@RequestMapping("/authors")
 public class AuthorController {
 
     private final AuthorDao authorDao;
@@ -18,35 +17,44 @@ public class AuthorController {
         this.authorDao = authorDao;
     }
 
-    @GetMapping("/save")
+    @GetMapping
     @ResponseBody
-    public String save(){
-        Author author = new Author();
-        author.setFirstName("Janusz");
-        author.setLastName("Karolak");
-        authorDao.save(author);
-        return "Autor dodana "+ author.toString();
+    public String get(@RequestParam Long id) {
+        return authorDao.getById(id).toString();
     }
 
-    @GetMapping("/edit/{id}")
+    @RequestMapping("/save")
     @ResponseBody
-    public String edit(@PathVariable Long id){
-        Author author = authorDao.findById(id);
-        author.setLastName("Kisiel");
-        authorDao.update(author);
+    public String save(@RequestParam String firstName,
+                       @RequestParam String lastName) {
+        Author author = new Author();
+        author.setFirstName(firstName);
+        author.setLastName(lastName);
+        authorDao.save(author);
         return author.toString();
     }
 
-    @GetMapping("/{id}")
+    @RequestMapping("/update")
     @ResponseBody
-    public String get(@PathVariable Long id){
-        return authorDao.findById(id).toString();
+    public String update(@RequestParam Long id,
+                         @RequestParam String firstName,
+                         @RequestParam String lastName) {
+        Author author = authorDao.getById(id);
+        if (author == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        author.setFirstName(firstName);
+        author.setLastName(lastName);
+        return authorDao.updateAndReturn(author).toString();
     }
 
-    @GetMapping("/delete/{id}")
+    @RequestMapping("/delete")
     @ResponseBody
-    public String delete(@PathVariable Long id){
-        authorDao.delete(authorDao.findById(id));
-        return "Autor "+id+" skasowany";
+    public void delete(@RequestParam Long id) {
+        Author author = authorDao.getById(id);
+        if (author == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        authorDao.remove(author);
     }
 }

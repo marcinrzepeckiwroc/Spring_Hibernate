@@ -24,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -40,13 +41,13 @@ public class BookController {
         this.authorDao = authorDao;
     }
 
-    @GetMapping()
+    @GetMapping
     @ResponseBody
     public String get(@RequestParam Long id) {
         return bookDao.getById(id).toString();
     }
 
-    @GetMapping("/save")
+    @RequestMapping("/save")
     @ResponseBody
     public String save(@RequestParam String title,
                        @RequestParam(required = false) String description,
@@ -64,16 +65,23 @@ public class BookController {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
         }
+        if (authorIds != null) {
+            authorIds.stream()
+                    .map(authorDao::getById)
+                    .filter(Objects::nonNull)
+                    .forEach(book.getAuthors()::add);
+        }
         bookDao.save(book);
         return book.toString();
     }
 
-    @GetMapping("/update")
+    @RequestMapping("/update")
     @ResponseBody
     public String update(@RequestParam Long id,
                          @RequestParam(required = false) String title,
                          @RequestParam(required = false) String description,
-                         @RequestParam(required = false) Long publisherId) {
+                         @RequestParam(required = false) Long publisherId,
+                         @RequestParam(required = false) List<Long> authorIds) {
         Book book = bookDao.getById(id);
         if (book == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -86,10 +94,16 @@ public class BookController {
                         book::setPublisher,
                         () -> { throw new ResponseStatusException(HttpStatus.BAD_REQUEST);}
                 );
+        if (authorIds != null) {
+            authorIds.stream()
+                    .map(authorDao::getById)
+                    .filter(Objects::nonNull)
+                    .forEach(book.getAuthors()::add);
+        }
         return bookDao.updateAndReturn(book).toString();
     }
 
-    @PostMapping("/delete")
+    @RequestMapping("/delete")
     @ResponseBody
     public void delete(@RequestParam Long id) {
         Book book = bookDao.getById(id);
@@ -97,20 +111,5 @@ public class BookController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         bookDao.remove(book);
-    }
-
-    @GetMapping("/add")
-    @ResponseBody
-    public String add(@RequestParam(required = false) List<Long> id){
-        Book book = new Book();
-        book.setTitle("Nowa Ksiazka");
-        book.setRating(2.9);
-        for (Long authorId: id) {
-            if(authorDao.findById(authorId) != null){
-                book.addAuthor(authorDao.findById(authorId));
-            }
-        }
-        bookDao.save(book);
-        return "Autor dodany";
     }
 }
