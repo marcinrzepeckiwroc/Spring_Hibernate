@@ -1,4 +1,4 @@
-package com.rzepecki.spring.hibernate.controller;
+package com.rzepecki.spring.hibernate.controller.forms;
 
 import com.rzepecki.spring.hibernate.domain.dao.AuthorDao;
 import com.rzepecki.spring.hibernate.domain.dao.BookDao;
