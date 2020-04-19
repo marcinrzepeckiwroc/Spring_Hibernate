@@ -11,9 +11,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -32,39 +34,45 @@ public class BookFormController {
     }
 
     @ModelAttribute("publishers")
-    public List<Publisher> publishers(){
+    public List<Publisher> publishers() {
         return publisherDao.findAll();
     }
 
     @ModelAttribute("authors")
-    public List<Author> authors(){
+    public List<Author> authors() {
         return authorDao.findAll();
     }
 
     @GetMapping
-    public String prepareAllBooks(Model model){
+    public String prepareAllBooksPage(Model model) {
         model.addAttribute("books", bookDao.findAllWithAuthors());
         return "books/list";
     }
 
     @GetMapping("/add")
-    public String prepareAddBookForm(Model model){
+    public String prepareAddBookForm(Model model) {
         model.addAttribute("book", new Book());
         return "books/add";
     }
 
     @PostMapping("/add")
-    public String processAddBookForm(Book book){
-        logger.info("Book before writing {}", book);
+    public String processAddBookForm(@Valid Book book, BindingResult bindingResult) {
+        logger.info("Książka do zapisu: {}", book);
+        if (bindingResult.hasErrors()) {
+            logger.warn("Błędne dane książki!");
+            return "books/add";
+        }
+        logger.info("Książka przed zapisem: {}", book);
         bookDao.save(book);
+        logger.info("Książka po zapisie: {}", book);
         return "redirect:/forms/books";
     }
 
     @GetMapping("/edit")
-    public ModelAndView prepareEditBookForm(Long id){
+    public ModelAndView prepareEditBookForm(Long id) {
         ModelAndView modelAndView = new ModelAndView();
         Book book = bookDao.getByIdWithAttributes(id);
-        if(book == null){
+        if (book == null) {
             modelAndView.setStatus(HttpStatus.NOT_FOUND);
             return modelAndView;
         }
@@ -74,10 +82,14 @@ public class BookFormController {
     }
 
     @PostMapping("/edit")
-    public ModelAndView processEditBookForm(Book book){
+    public ModelAndView processEditBookForm(@Valid Book book, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
-        Book bookDB = bookDao.getById(book.getId());
-        if(bookDB == null){
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("books/edit");
+            return modelAndView;
+        }
+        Book bookInDB = bookDao.getById(book.getId());
+        if (bookInDB == null) {
             modelAndView.setStatus(HttpStatus.NOT_FOUND);
             return modelAndView;
         }

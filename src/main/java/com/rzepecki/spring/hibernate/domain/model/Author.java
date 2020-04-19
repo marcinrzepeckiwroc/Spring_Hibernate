@@ -1,6 +1,12 @@
 package com.rzepecki.spring.hibernate.domain.model;
 
+import com.rzepecki.spring.hibernate.validation.constraints.Adult;
+import org.hibernate.validator.constraints.pl.PESEL;
+
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -12,11 +18,34 @@ public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
+    @NotBlank
     private String firstName;
+    @NotNull
+    @NotBlank
     private String lastName;
+
+    @NotNull
+    @PESEL
+    private Long pesel;
+
+    @NotNull
+    @Email(regexp = ".+@.+\\..+")
+    private String email;
+
+    @Adult
+    private Integer yearOfBirth;
 
     @ManyToMany(mappedBy = "authors")
     private Set<Book> books = new HashSet<>();
+
+    public Integer getYearOfBirth() {
+        return yearOfBirth;
+    }
+
+    public void setYearOfBirth(Integer yearOfBirth) {
+        this.yearOfBirth = yearOfBirth;
+    }
 
     public Set<Book> getBooks() {
         return books;
@@ -46,6 +75,22 @@ public class Author {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 '}';
+    }
+
+    public Long getPesel() {
+        return pesel;
+    }
+
+    public void setPesel(Long pesel) {
+        this.pesel = pesel;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Long getId() {

@@ -22,12 +22,19 @@
     </p>
     <p>
         Raiting: <form:input path="rating" type="number" min="0" max="9.9" step="0.1"/>
+        <form:errors path="rating"/>
+    </p>
+    <p>
+        Pages: <form:input path="pages" type="text"/>
+        <form:errors path="pages"/>
     </p>
     <p>
         Publisher: <form:select path="publisher" items="${publishers}" itemValue="id" itemLabel="name"/>
+        <form:errors path="publisher"/>
     </p>
     <p>
         Author: <form:select path="authors" items="${authors}" itemValue="id" itemLabel="fullName" multiple="true"/>
+        <form:errors path="authors"/>
     </p>
     <p>
         <form:button>Doddaj</form:button>

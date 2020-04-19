@@ -7,30 +7,28 @@
 </head>
 <body>
 <p>
-    <a href="/forms/authors/add">Add book</a>
+    <a href="/forms/publishers/add">Add book</a>
 </p>
 
 <table>
     <tr>
         <th>Lp.</th>
-        <th>FirstName</th>
-        <th>LastName</th>
+        <th>Name</th>
         <th>Action</th>
     </tr>
 
-    <c:forEach items="${authors}" var="author" varStatus="stat">
+    <c:forEach items="${publishers}" var="publisher" varStatus="stat">
         <tr>
             <td>${stat.count}</td>
-            <td>${author.firstName}</td>
-            <td>${author.lastName}</td>
+            <td>${publisher.name}</td>
             <td>
-                <c:url value="/forms/authors/edit" var="editURL">
-                    <c:param name="id" value="${author.id}"/>
+                <c:url value="/forms/publishers/edit" var="editURL">
+                    <c:param name="id" value="${publisher.id}"/>
                 </c:url>
                 <a href="${editURL}"> Edit</a>
 
-                <c:url value="/forms/authors/delete" var="deleteURL">
-                    <c:param name="id" value="${author.id}"/>
+                <c:url value="/forms/publishers/delete" var="deleteURL">
+                    <c:param name="id" value="${publisher.id}"/>
                 </c:url>
                 <a href="${deleteURL}"> Delete</a>
 

@@ -10,7 +10,12 @@
  */
 package com.rzepecki.spring.hibernate.domain.model;
 
+import org.hibernate.validator.constraints.pl.NIP;
+import org.hibernate.validator.constraints.pl.REGON;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -20,7 +25,15 @@ public class Publisher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull
+    @NotBlank
     private String name;
+
+    @NIP
+    private String nip;
+    @REGON
+    private String regon;
 
     @Override
     public boolean equals(Object o) {
@@ -41,6 +54,22 @@ public class Publisher {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public String getNip() {
+        return nip;
+    }
+
+    public void setNip(String nip) {
+        this.nip = nip;
+    }
+
+    public String getRegon() {
+        return regon;
+    }
+
+    public void setRegon(String regon) {
+        this.regon = regon;
     }
 
     public Long getId() {

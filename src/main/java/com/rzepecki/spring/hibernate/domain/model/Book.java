@@ -1,6 +1,12 @@
 package com.rzepecki.spring.hibernate.domain.model;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -12,20 +18,34 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Size(min = 5)
     @Column(nullable = false)
     private String title;
-    @Column(precision = 2, scale = 1)
+
+    @Column(columnDefinition = "NUMERIC(2,1) DEFAULT 0 NOT NULL UNIQUE")
+    @Range(min = 1, max = 10)
     private Double rating;
+
+    @Size(max = 600)
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Min(1)
+    private Integer pages;
+
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "publisher_id")
     private Publisher publisher;
 
+
+
     @Column(name = "publisher_id", updatable = false, insertable = false)
     private Long publisherId;
 
+    @NotNull
+    @NotEmpty
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "books_authors",
     joinColumns = @JoinColumn(name = "book_id"),
@@ -66,6 +86,14 @@ public class Book {
 
     public void setPublisherId(Long publisherId) {
         this.publisherId = publisherId;
+    }
+
+    public Integer getPages() {
+        return pages;
+    }
+
+    public void setPages(Integer pages) {
+        this.pages = pages;
     }
 
     @Override
